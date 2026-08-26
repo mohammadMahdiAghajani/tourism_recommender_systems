@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}ثبت‌نام{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+
+                <h2 class="h4 mb-3 text-center">ایجاد حساب کاربری</h2>
+
+                <p class="text-muted small text-center mb-4">
+                    برای استفاده از امکانات سامانه ثبت‌نام کنید.
+                </p>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            نام کاربری
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-control"
+                            placeholder="نام کاربری"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            ایمیل
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="example@email.com"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            رمز عبور
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="رمز عبور"
+                            autocomplete="new-password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        ثبت‌نام
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted small">
+                        قبلاً حساب ساخته‌اید؟
+                    </span>
+
+                    <a href="{% url 'login' %}" class="small">
+                        وارد شوید
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

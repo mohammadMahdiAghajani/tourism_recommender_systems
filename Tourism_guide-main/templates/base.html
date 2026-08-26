@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}سامانه راهنمای گردشگری ایران{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!--  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --accent: #198754;
+            --bg-soft: #f8f9fa;
+        }
+        body { font-family: 'Vazirmatn', sans-serif; background: var(--bg-soft); }
+        .navbar-brand { font-weight: 700; }
+        .hero {
+            background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+            color: white;
+            border-radius: 1rem;
+            padding: 2.5rem 1.5rem;
+        }
+        .card-attraction {
+            transition: transform .2s, box-shadow .2s;
+            height: 100%;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+        }
+        .card-attraction:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,.12);
+        }
+        .card-img-top {
+            height: 180px;
+            object-fit: cover;
+            background: #e9ecef;
+        }
+        .badge-soft {
+            background: #e7f1ff;
+            color: #0d6efd;
+        }
+        .stat-box {
+            background: white;
+            border-radius: .75rem;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,.05);
+        }
+        footer {
+            background: #212529;
+            color: #adb5bd;
+            margin-top: 3rem;
+            padding: 2rem 0;
+        }
+        .btn-action { min-width: 100px; }
+        .map-placeholder {
+            background: #dee2e6;
+            height: 250px;
+            border-radius: .5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="bi bi-geo-alt-fill"></i> راهنمای گردشگری ایران
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">خانه</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'attraction_list' %}">جاذبه‌ها</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'city_list' %}">شهرها</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                {% if current_user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">
+                            <i class="bi bi-person-circle"></i> {{ current_user.username }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">خروج</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light btn-sm px-3" href="{% url 'login' %}">ورود</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="container my-4">
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <div class="container text-center">
+        <p class="mb-1">سامانه تصمیم‌یار خدمات توریستی</p>
+        <small>تمرکز بر جاذبه‌های ایران  </small>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function interact(attractionId, action) {
+    const formData = new FormData();
+    formData.append('action', action);
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    fetch(`/attractions/${attractionId}/interact/`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin'
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.ok) {
+            const btn = document.getElementById(`btn-${action}-${attractionId}`);
+            if (btn) {
+                btn.classList.add('btn-success');
+                btn.classList.remove('btn-outline-primary', 'btn-outline-secondary');
+            }
+            alert('ثبت شد: ' + action);
+        } else {
+            alert(data.error || 'خطا');
+            if (data.error && data.error.includes('وارد')) location.href = '{% url "login" %}';
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

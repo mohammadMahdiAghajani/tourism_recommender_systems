@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}شهرها{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">شهرهای گردشگری</h1>
+<div class="row g-3">
+    {% for city in cities %}
+    <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="card-title">{{ city.name }}</h5>
+                <p class="text-muted small mb-2">{{ city.country.name }}</p>
+                <p class="mb-3"><span class="badge bg-primary">{{ city.attr_count }} جاذبه</span></p>
+                <a href="{% url 'city_detail' city.id %}" class="btn btn-sm btn-outline-primary">مشاهده</a>
+                <a href="{% url 'attraction_list' %}?city={{ city.id }}" class="btn btn-sm btn-primary">جاذبه‌ها</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

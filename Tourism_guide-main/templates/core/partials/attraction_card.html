@@ -1,0 +1,22 @@
+<div class="card card-attraction">
+    {% if attraction.main_image %}
+    <img src="{{ attraction.main_image }}" class="card-img-top" alt="{{ attraction.name }}"
+         onerror="this.src='https://placehold.co/400x180/e9ecef/6c757d?text=No+Image'">
+    {% else %}
+    <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted">
+        <i class="bi bi-image" style="font-size: 2rem;"></i>
+    </div>
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title fs-6">
+            <a href="{% url 'attraction_detail' attraction.id %}" class="text-decoration-none text-dark">
+                {{ attraction.name }}
+            </a>
+        </h5>
+        <p class="card-text small text-muted mb-2">
+            <i class="bi bi-geo-alt"></i> {{ attraction.city.name }}
+        </p>
+        <p class="card-text small">{{ attraction.short_description|truncatechars:80 }}</p>
+        <a href="{% url 'attraction_detail' attraction.id %}" class="btn btn-sm btn-primary">جزئیات</a>
+    </div>
+</div>

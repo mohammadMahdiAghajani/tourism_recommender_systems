@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ city.name }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'city_list' %}">شهرها</a></li>
+        <li class="breadcrumb-item active">{{ city.name }}</li>
+    </ol>
+</nav>
+<h1 class="h3 mb-2">{{ city.name }}</h1>
+<p class="text-muted mb-4">{{ city.country.name }} · {{ attractions|length }} جاذبه</p>
+<div class="row g-3">
+    {% for a in attractions %}
+    <div class="col-md-4 col-sm-6">
+        {% include "core/partials/attraction_card.html" with attraction=a %}
+    </div>
+    {% empty %}
+    <div class="col-12"><div class="alert alert-info">جاذبه‌ای ثبت نشده است.</div></div>
+    {% endfor %}
+</div>
+{% endblock %}

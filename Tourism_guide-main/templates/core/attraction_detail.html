@@ -1,0 +1,260 @@
+{% extends "base.html" %} {% block title %}{{ attraction.name }}{% endblock %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'attraction_list' %}">جاذبه‌ها</a>
+    </li>
+    <li class="breadcrumb-item active">{{ attraction.name }}</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="bg-white rounded shadow-sm p-3 mb-3">
+      {% if images %}
+      <div
+        id="carouselImages"
+        class="carousel slide mb-3"
+        data-bs-ride="carousel"
+      >
+        <div class="carousel-inner">
+          {% for img in images %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <img
+              src="{{ img.image_url_full }}"
+              class="d-block w-100 rounded"
+              style="max-height: 400px; object-fit: cover"
+              alt="{{ img.caption|default:attraction.name }}"
+              onerror="
+                this.src =
+                  'https://placehold.co/800x400/e9ecef/6c757d?text=Image'
+              "
+            />
+            <!-- <img src="{{ img.image_url }}" class="d-block w-100 rounded" style="max-height:400px;object-fit:cover"
+                             alt="{{ img.caption|default:attraction.name }}"
+                             onerror="this.src='https://placehold.co/800x400/e9ecef/6c757d?text=Image'"> -->
+            {% if img.caption %}
+            <div
+              class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded"
+            >
+              <p class="mb-0">{{ img.caption }}</p>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% if images|length > 1 %}
+        <button
+          class="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselImages"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button
+          class="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselImages"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon"></span>
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <h1 class="h3">{{ attraction.name }}</h1>
+      <p class="text-muted">
+        <i class="bi bi-geo-alt"></i> {{ attraction.city.name }} {% if
+        attraction.city.country %} · {{ attraction.city.country.name }}{% endif
+        %}
+      </p>
+      <p class="lead">{{ attraction.short_description }}</p>
+      <div class="mb-3">{{ attraction.full_description|linebreaks }}</div>
+
+      {% if current_user %}
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <button
+          id="btn-like-{{ attraction.id }}"
+          class="btn btn-outline-primary btn-action"
+          onclick="interact({{ attraction.id }}, 'like')"
+        >
+          <i class="bi bi-heart"></i> پسندیدن
+        </button>
+        <button
+          id="btn-save-{{ attraction.id }}"
+          class="btn btn-outline-secondary btn-action"
+          onclick="interact({{ attraction.id }}, 'save')"
+        >
+          <i class="bi bi-bookmark"></i> ذخیره
+        </button>
+        <!-- <button
+          id="btn-visit-{{ attraction.id }}"
+          class="btn btn-outline-success btn-action"
+          onclick="interact({{ attraction.id }}, 'visit')"
+        >
+          <i class="bi bi-check2-circle"></i> بازدید کردم
+        </button> -->
+      </div>
+      {% else %}
+      <div class="alert alert-light border">
+        برای ثبت علاقه‌مندی و دریافت پیشنهاد شخصی‌سازی‌شده
+        <a href="{% url 'login' %}">وارد شوید</a>.
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="bg-white rounded shadow-sm p-3 mb-3">
+      <h5 class="mb-3">اطلاعات مکانی</h5>
+      <p class="small mb-1">
+        <strong>عرض جغرافیایی:</strong> {{ attraction.latitude }}
+      </p>
+      <p class="small mb-3">
+        <strong>طول جغرافیایی:</strong> {{ attraction.longitude }}
+      </p>
+      <div class="map-placeholder mb-2">
+        <div class="text-center">
+          <i class="bi bi-map fs-1"></i><br />
+          <a
+            href="https://www.openstreetmap.org/?mlat={{ attraction.latitude }}&mlon={{ attraction.longitude }}#map=15/{{ attraction.latitude }}/{{ attraction.longitude }}"
+            target="_blank"
+            class="btn btn-sm btn-outline-primary mt-2"
+          >
+            مشاهده روی نقشه
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {% if profile %}
+    <div class="bg-white rounded shadow-sm p-3 mb-3">
+      <h5 class="mb-3">ویژگی‌ها</h5>
+      <ul class="list-unstyled small">
+        <li class="mb-2">
+          <span class="text-muted">نوع:</span>
+          <span class="badge badge-soft">{{ profile.attraction_type }}</span>
+        </li>
+        <li class="mb-2">
+          <span class="text-muted">انگیزه:</span> {{ profile.visit_motivation }}
+        </li>
+        <li class="mb-2">
+          <span class="text-muted">محیط:</span> {{ profile.environment }}
+        </li>
+        <li class="mb-2">
+          <span class="text-muted">هزینه:</span> {{ profile.cost_band }}
+        </li>
+        <li class="mb-2">
+          <span class="text-muted">فصل مناسب:</span> {{ profile.best_season }}
+        </li>
+        <li class="mb-2">
+          <span class="text-muted">مدت بازدید:</span> {{ profile.visit_duration
+          }}
+        </li>
+        <li class="mb-2">
+          <span class="text-muted">محبوبیت:</span> {{ profile.popularity_level
+          }}
+        </li>
+      </ul>
+    </div>
+    {% endif %}
+
+    <div class="bg-white rounded shadow-sm p-3 mb-3">
+      <h5 class="mb-3">آمار تعاملات</h5>
+      <ul class="list-unstyled small">
+        {% for action, count in stats.items %}
+        <li class="d-flex justify-content-between mb-1">
+          <span>{{ action }}</span>
+          <strong>{{ count }}</strong>
+        </li>
+        {% empty %}
+        <li class="text-muted">هنوز تعاملی ثبت نشده</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% if related %}
+<section class="mt-4">
+  <h4 class="mb-3">جاذبه‌های مرتبط در {{ attraction.city.name }}</h4>
+  <div class="row g-3">
+    {% for a in related %}
+    <div class="col-md-3 col-sm-6">
+      {% include "core/partials/attraction_card.html" with attraction=a %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+<script>
+
+  document.addEventListener('DOMContentLoaded', function () {
+
+      // اگر کاربر وارد نشده باشد، View ثبت نمی‌شود
+      {% if current_user %}
+
+      setTimeout(function () {
+
+          fetch("{% url 'record_view' attraction.id %}", {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": getCookie("csrftoken"),
+                  "Content-Type": "application/json"
+              }
+          })
+          .then(response => response.json())
+          .then(data => {
+
+              if (data.ok) {
+                  console.log("View ثبت شد");
+              }
+
+          })
+          .catch(error => {
+              console.error("خطا در ثبت View:", error);
+          });
+
+      }, 5000);
+
+      {% endif %}
+
+  });
+
+
+  // =====================================
+  // گرفتن CSRF Token
+  // =====================================
+
+  function getCookie(name) {
+
+      let cookieValue = null;
+
+      if (document.cookie && document.cookie !== '') {
+
+          const cookies = document.cookie.split(';');
+
+          for (let i = 0; i < cookies.length; i++) {
+
+              const cookie = cookies[i].trim();
+
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+
+                  cookieValue = decodeURIComponent(
+                      cookie.substring(name.length + 1)
+                  );
+
+                  break;
+              }
+          }
+      }
+
+      return cookieValue;
+  }
+</script>
+
+{% endblock %}

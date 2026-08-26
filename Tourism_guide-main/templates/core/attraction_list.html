@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}فهرست جاذبه‌ها{% endblock %}
+
+{% block content %}
+
+<h1 class="h3 mb-4">جاذبه‌های گردشگری</h1>
+
+
+<!-- ========================= -->
+<!-- فیلترها -->
+<!-- ========================= -->
+
+<form method="get" class="row g-2 mb-4 bg-white p-3 rounded shadow-sm">
+
+    <!-- جستجو -->
+    <div class="col-md-3">
+        <input
+            type="text"
+            name="q"
+            value="{{ query }}"
+            class="form-control"
+            placeholder="جستجوی جاذبه..."
+        >
+    </div>
+
+
+    <!-- شهر -->
+    <div class="col-md-2">
+
+        <select name="city" class="form-select">
+
+            <option value="">
+                همه شهرها
+            </option>
+
+            {% for c in cities %}
+
+                <option
+                    value="{{ c.id }}"
+                    {% if selected_city|stringformat:"s" == c.id|stringformat:"s" %}
+                        selected
+                    {% endif %}
+                >
+                    {{ c.name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- نوع جاذبه -->
+    <div class="col-md-2">
+
+        <select name="type" class="form-select">
+
+            <option value="">
+                همه انواع جاذبه
+            </option>
+
+            {% for t in types %}
+
+                <option
+                    value="{{ t }}"
+                    {% if selected_type == t %}
+                        selected
+                    {% endif %}
+                >
+                    {{ t }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- محیط / موقعیت -->
+    <div class="col-md-2">
+
+        <select name="environment" class="form-select">
+
+            <option value="">
+                همه محیط‌ها
+            </option>
+
+            {% for e in environments %}
+
+                <option
+                    value="{{ e }}"
+                    {% if selected_environment == e %}
+                        selected
+                    {% endif %}
+                >
+                    {{ e }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+
+    <!-- دکمه فیلتر -->
+    <div class="col-md-3">
+
+        <button
+            type="submit"
+            class="btn btn-primary w-100"
+        >
+            <i class="bi bi-funnel"></i>
+            فیلتر
+        </button>
+
+    </div>
+
+</form>
+
+
+<!-- ========================= -->
+<!-- تعداد نتایج -->
+<!-- ========================= -->
+
+<p class="text-muted">
+
+    {{ attractions|length }}
+    نتیجه
+
+</p>
+
+
+<!-- ========================= -->
+<!-- لیست جاذبه‌ها -->
+<!-- ========================= -->
+
+<div class="row g-3">
+
+    {% for a in attractions %}
+
+        <div class="col-md-4 col-sm-6">
+
+            {% include "core/partials/attraction_card.html" with attraction=a %}
+
+        </div>
+
+    {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-info">
+
+                جاذبه‌ای با این فیلترها یافت نشد.
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+{% endblock %}

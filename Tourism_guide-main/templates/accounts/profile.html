@@ -1,0 +1,931 @@
+```django
+{% extends "base.html" %}
+
+{% block title %}
+پروفایل {{ profile_user.username }}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+  <!-- ========================= -->
+  <!-- ستون سمت راست / اطلاعات کاربر -->
+  <!-- ========================= -->
+
+  <div class="col-lg-4 mb-4">
+
+    <!-- کارت کاربر -->
+    <div class="card shadow-sm border-0 mb-3">
+
+      <div class="card-body text-center">
+
+        {% if profile_user.profile_image_url %}
+
+        <img
+          src="{{ profile_user.profile_image_url }}"
+          class="rounded-circle mb-3"
+          width="96"
+          height="96"
+          onerror="this.src = 'https://placehold.co/96x96/0d6efd/fff?text=U'"
+        />
+
+        {% else %}
+
+        <div
+          class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3"
+          style="width: 96px; height: 96px; font-size: 2rem"
+        >
+          {{ profile_user.username|first|upper }}
+        </div>
+
+        {% endif %}
+
+        <h4>{{ profile_user.username }}</h4>
+
+        <p class="text-muted small">
+          {{ profile_user.email }}
+        </p>
+
+      </div>
+
+
+      <!-- ========================= -->
+      <!-- اطلاعات و ترجیحات کاربر -->
+      <!-- ========================= -->
+
+      {% if profile %}
+
+      <ul class="list-group list-group-flush small">
+
+        <!-- ملیت -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>ملیت</span>
+
+          <strong>
+            {% if profile.nationality == "iranian" %}
+              ایرانی
+            {% elif profile.nationality == "turkish" %}
+              ترکی
+            {% elif profile.nationality == "azerbaijani" %}
+              آذربایجانی
+            {% elif profile.nationality == "kurdish" %}
+              کردی
+            {% elif profile.nationality == "arab" %}
+              عرب
+            {% elif profile.nationality == "afghan" %}
+              افغانستانی
+            {% else %}
+              {{ profile.nationality }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- زبان -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>زبان</span>
+
+          <strong>
+            {% if profile.language == "fa" %}
+              فارسی
+            {% elif profile.language == "en" %}
+              انگلیسی
+            {% elif profile.language == "tr" %}
+              ترکی
+            {% elif profile.language == "ar" %}
+              عربی
+            {% elif profile.language == "az" %}
+              آذری
+            {% elif profile.language == "ku" %}
+              کردی
+            {% else %}
+              سایر
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- گروه سنی -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>گروه سنی</span>
+
+          <strong>
+            {% if profile.age_band == "under_18" %}
+              زیر ۱۸ سال
+            {% elif profile.age_band == "18_24" %}
+              ۱۸ تا ۲۴
+            {% elif profile.age_band == "25_34" %}
+              ۲۵ تا ۳۴
+            {% elif profile.age_band == "35_44" %}
+              ۳۵ تا ۴۴
+            {% elif profile.age_band == "45_54" %}
+              ۴۵ تا ۵۴
+            {% elif profile.age_band == "55_plus" %}
+              ۵۵ سال به بالا
+            {% else %}
+              {{ profile.age_band }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- بودجه -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>بودجه</span>
+
+          <strong>
+            {% if profile.budget_band == "low" %}
+              کم
+            {% elif profile.budget_band == "medium" %}
+              متوسط
+            {% elif profile.budget_band == "high" %}
+              زیاد
+            {% else %}
+              {{ profile.budget_band }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- سبک سفر -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>سبک سفر</span>
+
+          <strong>
+            {% if profile.travel_style == "budget" %}
+              اقتصادی
+            {% elif profile.travel_style == "balanced" %}
+              متعادل
+            {% elif profile.travel_style == "luxury" %}
+              لوکس
+            {% elif profile.travel_style == "backpacker" %}
+              بک‌پکر
+            {% elif profile.travel_style == "family" %}
+              خانوادگی
+            {% elif profile.travel_style == "romantic" %}
+              رمانتیک
+            {% elif profile.travel_style == "adventure" %}
+              ماجراجویانه
+            {% elif profile.travel_style == "religious" %}
+              مذهبی
+            {% elif profile.travel_style == "cultural" %}
+              فرهنگی
+            {% else %}
+              {{ profile.travel_style }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- نوع همراهان -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>همراهان</span>
+
+          <strong>
+            {% if profile.travel_party_type == "solo" %}
+              تنها
+            {% elif profile.travel_party_type == "couple" %}
+              زوج
+            {% elif profile.travel_party_type == "family" %}
+              خانواده
+            {% elif profile.travel_party_type == "friends" %}
+              دوستان
+            {% elif profile.travel_party_type == "group" %}
+              گروه
+            {% else %}
+              {{ profile.travel_party_type }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- میزان فعالیت -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>میزان فعالیت</span>
+
+          <strong>
+            {% if profile.activity_level == "low" %}
+              کم
+            {% elif profile.activity_level == "moderate" %}
+              متوسط
+            {% elif profile.activity_level == "high" %}
+              زیاد
+            {% else %}
+              {{ profile.activity_level }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- سطح جابه‌جایی -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>سطح جابه‌جایی</span>
+
+          <strong>
+            {% if profile.mobility_level == "no_limit" %}
+              بدون محدودیت
+            {% elif profile.mobility_level == "minor_limit" %}
+              محدودیت جزئی
+            {% elif profile.mobility_level == "limited" %}
+              محدود
+            {% elif profile.mobility_level == "wheelchair_needed" %}
+              نیازمند ویلچر
+            {% else %}
+              {{ profile.mobility_level }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- فصل -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>فصل مورد علاقه</span>
+
+          <strong>
+            {% if profile.season_preference == "spring" %}
+              بهار
+            {% elif profile.season_preference == "summer" %}
+              تابستان
+            {% elif profile.season_preference == "autumn" %}
+              پاییز
+            {% elif profile.season_preference == "winter" %}
+              زمستان
+            {% elif profile.season_preference == "all_year" %}
+              تمام سال
+            {% else %}
+              {{ profile.season_preference }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- ترجیح مذهبی -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>ترجیح سفر مذهبی</span>
+
+          <strong>
+            {% if profile.religious_travel_preference == "none" %}
+              بدون ترجیح
+            {% elif profile.religious_travel_preference == "halal_friendly" %}
+              مناسب مسلمانان
+            {% elif profile.religious_travel_preference == "prayer_space_needed" %}
+              نیازمند فضای عبادت
+            {% elif profile.religious_travel_preference == "modest_environment_preferred" %}
+              محیط پوشیده و متناسب
+            {% elif profile.religious_travel_preference == "gender_sensitive" %}
+              حساسیت به تفکیک جنسیتی
+            {% else %}
+              {{ profile.religious_travel_preference }}
+            {% endif %}
+          </strong>
+        </li>
+
+
+        <!-- گروه قومی -->
+        <li class="list-group-item d-flex justify-content-between">
+          <span>گروه قومی</span>
+
+          <strong>
+            {% if profile.ethnic_group == "persian" %}
+              فارس
+            {% elif profile.ethnic_group == "kurdish" %}
+              کرد
+            {% elif profile.ethnic_group == "azerbaijani" %}
+              آذری
+            {% elif profile.ethnic_group == "lor" %}
+              لر
+            {% elif profile.ethnic_group == "arab" %}
+              عرب
+            {% elif profile.ethnic_group == "baluch" %}
+              بلوچ
+            {% elif profile.ethnic_group == "other" %}
+              سایر
+            {% elif profile.ethnic_group == "prefer_not_to_say" %}
+              ترجیح می‌دهم نگویم
+            {% else %}
+              {{ profile.ethnic_group }}
+            {% endif %}
+          </strong>
+        </li>
+
+      </ul>
+
+      {% endif %}
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- ترجیحات سفر -->
+    <!-- ========================= -->
+
+    <div class="card shadow-sm border-0">
+
+      <div class="card-header bg-white">
+        <strong>ترجیحات سفر</strong>
+      </div>
+
+      <div class="card-body">
+
+        <form method="POST" action="{% url 'update_preferences' %}">
+
+          {% csrf_token %}
+
+
+          <!-- ملیت -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              ملیت
+            </label>
+
+            <select name="nationality" class="form-select">
+
+              <option value="iranian"
+                {% if profile.nationality == "iranian" %}selected{% endif %}>
+                ایرانی
+              </option>
+
+              <option value="turkish"
+                {% if profile.nationality == "turkish" %}selected{% endif %}>
+                ترکی
+              </option>
+
+              <option value="azerbaijani"
+                {% if profile.nationality == "azerbaijani" %}selected{% endif %}>
+                آذربایجانی
+              </option>
+
+              <option value="kurdish"
+                {% if profile.nationality == "kurdish" %}selected{% endif %}>
+                کردی
+              </option>
+
+              <option value="arab"
+                {% if profile.nationality == "arab" %}selected{% endif %}>
+                عرب
+              </option>
+
+              <option value="afghan"
+                {% if profile.nationality == "afghan" %}selected{% endif %}>
+                افغانستانی
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- زبان -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              زبان
+            </label>
+
+            <select name="language" class="form-select">
+
+              <option value="fa"
+                {% if profile.language == "fa" %}selected{% endif %}>
+                فارسی
+              </option>
+
+              <option value="en"
+                {% if profile.language == "en" %}selected{% endif %}>
+                انگلیسی
+              </option>
+
+              <option value="tr"
+                {% if profile.language == "tr" %}selected{% endif %}>
+                ترکی
+              </option>
+
+              <option value="ar"
+                {% if profile.language == "ar" %}selected{% endif %}>
+                عربی
+              </option>
+
+              <option value="az"
+                {% if profile.language == "az" %}selected{% endif %}>
+                آذری
+              </option>
+
+              <option value="ku"
+                {% if profile.language == "ku" %}selected{% endif %}>
+                کردی
+              </option>
+
+              <option value="other"
+                {% if profile.language == "other" %}selected{% endif %}>
+                سایر
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- گروه سنی -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              گروه سنی
+            </label>
+
+            <select name="age_band" class="form-select">
+
+              <option value="under_18"
+                {% if profile.age_band == "under_18" %}selected{% endif %}>
+                زیر ۱۸ سال
+              </option>
+
+              <option value="18_24"
+                {% if profile.age_band == "18_24" %}selected{% endif %}>
+                ۱۸ تا ۲۴
+              </option>
+
+              <option value="25_34"
+                {% if profile.age_band == "25_34" %}selected{% endif %}>
+                ۲۵ تا ۳۴
+              </option>
+
+              <option value="35_44"
+                {% if profile.age_band == "35_44" %}selected{% endif %}>
+                ۳۵ تا ۴۴
+              </option>
+
+              <option value="45_54"
+                {% if profile.age_band == "45_54" %}selected{% endif %}>
+                ۴۵ تا ۵۴
+              </option>
+
+              <option value="55_plus"
+                {% if profile.age_band == "55_plus" %}selected{% endif %}>
+                ۵۵ سال به بالا
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- بودجه -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              بودجه سفر
+            </label>
+
+            <select name="budget_band" class="form-select">
+
+              <option value="low"
+                {% if profile.budget_band == "low" %}selected{% endif %}>
+                کم
+              </option>
+
+              <option value="medium"
+                {% if profile.budget_band == "medium" %}selected{% endif %}>
+                متوسط
+              </option>
+
+              <option value="high"
+                {% if profile.budget_band == "high" %}selected{% endif %}>
+                زیاد
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- سبک سفر -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              سبک سفر
+            </label>
+
+            <select name="travel_style" class="form-select">
+
+              <option value="budget"
+                {% if profile.travel_style == "budget" %}selected{% endif %}>
+                اقتصادی
+              </option>
+
+              <option value="balanced"
+                {% if profile.travel_style == "balanced" %}selected{% endif %}>
+                متعادل
+              </option>
+
+              <option value="luxury"
+                {% if profile.travel_style == "luxury" %}selected{% endif %}>
+                لوکس
+              </option>
+
+              <option value="backpacker"
+                {% if profile.travel_style == "backpacker" %}selected{% endif %}>
+                بک‌پکر
+              </option>
+
+              <option value="family"
+                {% if profile.travel_style == "family" %}selected{% endif %}>
+                خانوادگی
+              </option>
+
+              <option value="romantic"
+                {% if profile.travel_style == "romantic" %}selected{% endif %}>
+                رمانتیک
+              </option>
+
+              <option value="adventure"
+                {% if profile.travel_style == "adventure" %}selected{% endif %}>
+                ماجراجویانه
+              </option>
+
+              <option value="religious"
+                {% if profile.travel_style == "religious" %}selected{% endif %}>
+                مذهبی
+              </option>
+
+              <option value="cultural"
+                {% if profile.travel_style == "cultural" %}selected{% endif %}>
+                فرهنگی
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- نوع همراهان -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              نوع همراهان
+            </label>
+
+            <select name="travel_party_type" class="form-select">
+
+              <option value="solo"
+                {% if profile.travel_party_type == "solo" %}selected{% endif %}>
+                تنها
+              </option>
+
+              <option value="couple"
+                {% if profile.travel_party_type == "couple" %}selected{% endif %}>
+                زوج
+              </option>
+
+              <option value="family"
+                {% if profile.travel_party_type == "family" %}selected{% endif %}>
+                خانواده
+              </option>
+
+              <option value="friends"
+                {% if profile.travel_party_type == "friends" %}selected{% endif %}>
+                دوستان
+              </option>
+
+              <option value="group"
+                {% if profile.travel_party_type == "group" %}selected{% endif %}>
+                گروه
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- میزان فعالیت -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              میزان فعالیت
+            </label>
+
+            <select name="activity_level" class="form-select">
+
+              <option value="low"
+                {% if profile.activity_level == "low" %}selected{% endif %}>
+                کم
+              </option>
+
+              <option value="moderate"
+                {% if profile.activity_level == "moderate" %}selected{% endif %}>
+                متوسط
+              </option>
+
+              <option value="high"
+                {% if profile.activity_level == "high" %}selected{% endif %}>
+                زیاد
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- سطح جابه‌جایی -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              سطح جابه‌جایی
+            </label>
+
+            <select name="mobility_level" class="form-select">
+
+              <option value="no_limit"
+                {% if profile.mobility_level == "no_limit" %}selected{% endif %}>
+                بدون محدودیت
+              </option>
+
+              <option value="minor_limit"
+                {% if profile.mobility_level == "minor_limit" %}selected{% endif %}>
+                محدودیت جزئی
+              </option>
+
+              <option value="limited"
+                {% if profile.mobility_level == "limited" %}selected{% endif %}>
+                محدود
+              </option>
+
+              <option value="wheelchair_needed"
+                {% if profile.mobility_level == "wheelchair_needed" %}selected{% endif %}>
+                نیازمند ویلچر
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- فصل مورد علاقه -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              فصل مورد علاقه
+            </label>
+
+            <select name="season_preference" class="form-select">
+
+              <option value="spring"
+                {% if profile.season_preference == "spring" %}selected{% endif %}>
+                بهار
+              </option>
+
+              <option value="summer"
+                {% if profile.season_preference == "summer" %}selected{% endif %}>
+                تابستان
+              </option>
+
+              <option value="autumn"
+                {% if profile.season_preference == "autumn" %}selected{% endif %}>
+                پاییز
+              </option>
+
+              <option value="winter"
+                {% if profile.season_preference == "winter" %}selected{% endif %}>
+                زمستان
+              </option>
+
+              <option value="all_year"
+                {% if profile.season_preference == "all_year" %}selected{% endif %}>
+                تمام سال
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- ترجیح سفر مذهبی -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              ترجیح سفر مذهبی
+            </label>
+
+            <select
+              name="religious_travel_preference"
+              class="form-select"
+            >
+
+              <option value="none"
+                {% if profile.religious_travel_preference == "none" %}selected{% endif %}>
+                بدون ترجیح
+              </option>
+
+              <option value="halal_friendly"
+                {% if profile.religious_travel_preference == "halal_friendly" %}selected{% endif %}>
+                مناسب مسلمانان
+              </option>
+
+              <option value="prayer_space_needed"
+                {% if profile.religious_travel_preference == "prayer_space_needed" %}selected{% endif %}>
+                نیازمند فضای عبادت
+              </option>
+
+              <option value="modest_environment_preferred"
+                {% if profile.religious_travel_preference == "modest_environment_preferred" %}selected{% endif %}>
+                محیط پوشیده و متناسب
+              </option>
+
+              <option value="gender_sensitive"
+                {% if profile.religious_travel_preference == "gender_sensitive" %}selected{% endif %}>
+                حساسیت به تفکیک جنسیتی
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- گروه قومی -->
+          <div class="mb-3">
+
+            <label class="form-label">
+              گروه قومی
+            </label>
+
+            <select name="ethnic_group" class="form-select">
+
+              <option value="persian"
+                {% if profile.ethnic_group == "persian" %}selected{% endif %}>
+                فارس
+              </option>
+
+              <option value="kurdish"
+                {% if profile.ethnic_group == "kurdish" %}selected{% endif %}>
+                کرد
+              </option>
+
+              <option value="azerbaijani"
+                {% if profile.ethnic_group == "azerbaijani" %}selected{% endif %}>
+                آذری
+              </option>
+
+              <option value="lor"
+                {% if profile.ethnic_group == "lor" %}selected{% endif %}>
+                لر
+              </option>
+
+              <option value="arab"
+                {% if profile.ethnic_group == "arab" %}selected{% endif %}>
+                عرب
+              </option>
+
+              <option value="baluch"
+                {% if profile.ethnic_group == "baluch" %}selected{% endif %}>
+                بلوچ
+              </option>
+
+              <option value="other"
+                {% if profile.ethnic_group == "other" %}selected{% endif %}>
+                سایر
+              </option>
+
+              <option value="prefer_not_to_say"
+                {% if profile.ethnic_group == "prefer_not_to_say" %}selected{% endif %}>
+                ترجیح می‌دهم نگویم
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- دکمه -->
+          <button
+            type="submit"
+            class="btn btn-primary w-100"
+          >
+            ذخیره تغییرات
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- ستون سمت چپ / تعاملات -->
+  <!-- ========================= -->
+
+  <div class="col-lg-8">
+
+    <!-- ذخیره شده‌ها -->
+    <div class="card shadow-sm border-0 mb-3">
+
+      <div class="card-header bg-white">
+        <strong>ذخیره‌شده‌ها</strong>
+      </div>
+
+      <div class="card-body">
+
+        {% for i in saved %}
+
+        <a
+          href="{% url 'attraction_detail' i.attraction.id %}"
+          class="d-block mb-2"
+        >
+          {{ i.attraction.name }}
+        </a>
+
+        {% empty %}
+
+        <p class="text-muted mb-0">
+          هنوز چیزی ذخیره نکرده‌اید.
+        </p>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+
+    <!-- پسندیده‌ها -->
+    <div class="card shadow-sm border-0 mb-3">
+
+      <div class="card-header bg-white">
+        <strong>پسندیده‌ها</strong>
+      </div>
+
+      <div class="card-body">
+
+        {% for i in liked %}
+
+        <a
+          href="{% url 'attraction_detail' i.attraction.id %}"
+          class="d-block mb-2"
+        >
+          {{ i.attraction.name }}
+        </a>
+
+        {% empty %}
+
+        <p class="text-muted mb-0">
+          هنوز چیزی پسندیده‌اید.
+        </p>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+
+    <!-- آخرین تعاملات -->
+    <div class="card shadow-sm border-0">
+
+      <div class="card-header bg-white">
+        <strong>آخرین تعاملات</strong>
+      </div>
+
+      <ul class="list-group list-group-flush small">
+
+        {% for i in interactions %}
+
+        <li class="list-group-item d-flex justify-content-between">
+
+          <span>
+
+            <span class="badge bg-secondary">
+              {{ i.action_type }}
+            </span>
+
+            <a href="{% url 'attraction_detail' i.attraction.id %}">
+              {{ i.attraction.name }}
+            </a>
+
+          </span>
+
+          <span class="text-muted">
+            {{ i.created_at|date:"Y/m/d H:i" }}
+          </span>
+
+        </li>
+
+        {% empty %}
+
+        <li class="list-group-item text-muted">
+          تعاملی ثبت نشده
+        </li>
+
+        {% endfor %}
+
+      </ul>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+```

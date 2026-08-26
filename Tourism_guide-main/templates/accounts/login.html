@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}ورود{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+
+                <h2 class="h4 mb-3 text-center">ورود به سامانه</h2>
+
+                <p class="text-muted small text-center mb-4">
+                    برای ورود، نام کاربری و رمز عبور خود را وارد کنید.
+                </p>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            نام کاربری
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-control"
+                            placeholder="نام کاربری خود را وارد کنید"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            رمز عبور
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="رمز عبور خود را وارد کنید"
+                            autocomplete="current-password"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        ورود
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted small">
+                        حساب کاربری ندارید؟
+                    </span>
+
+                    <a href="{% url 'register' %}" class="small">
+                        ثبت‌نام کنید
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
