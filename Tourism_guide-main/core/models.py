@@ -1,7 +1,7 @@
 # Models mapped to existing MariaDB schema (managed=False)
 from django.db import models
 
-
+# مدل مربوط به کشورها
 class Countries(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
@@ -15,7 +15,7 @@ class Countries(models.Model):
     def __str__(self):
         return self.name
 
-
+# مدل مربوط به شهرها که هر شهر به یک کشور مرتبط است
 class Cities(models.Model):
     id = models.AutoField(primary_key=True)
     country = models.ForeignKey(Countries, models.DO_NOTHING, db_column='country_id')
@@ -31,7 +31,7 @@ class Cities(models.Model):
     def __str__(self):
         return self.name
 
-
+# اطلاعات پایه هر جاذبه مانند نام، توضیحات، موقعیت جغرافیایی
 class Attractions(models.Model):
     id = models.BigAutoField(primary_key=True)
     public_id = models.CharField(unique=True, max_length=36)
@@ -59,7 +59,7 @@ class Attractions(models.Model):
         return img.image_url_full if img else None
 
 
-
+# مدل مربوط به تصاویر جاذبه‌های گردشگری
 class AttractionImages(models.Model):
     id = models.BigAutoField(primary_key=True)
 
@@ -92,7 +92,7 @@ class AttractionImages(models.Model):
     def __str__(self):
         return f'{self.attraction.name} - {self.display_order}'
 
-
+# مدل مربوط به اطلاعات تکمیلی و ویژگی‌های هر جاذبه
 class AttractionProfiles(models.Model):
     attraction = models.OneToOneField(
         Attractions, models.CASCADE, db_column='attraction_id',
@@ -142,7 +142,7 @@ class AttractionProfiles(models.Model):
     def __str__(self):
         return f'Profile of {self.attraction_id}'
 
-
+# مدل مربوط به برچسب‌های قابل استفاده برای دسته‌بندی جاذبه‌ها و کاربران
 class Tags(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, unique=True)
@@ -156,7 +156,7 @@ class Tags(models.Model):
     def __str__(self):
         return self.name
 
-
+# این مدل مشخص می‌کند هر جاذبه چه برچسب‌هایی دارد
 class AttractionTags(models.Model):
     attraction = models.ForeignKey(
         Attractions, models.CASCADE, db_column='attraction_id', related_name='attraction_tags'
@@ -170,7 +170,7 @@ class AttractionTags(models.Model):
         verbose_name = 'برچسب جاذبه'
         verbose_name_plural = 'برچسب‌های جاذبه'
 
-
+# این مدل برای کاربران است
 class Users(models.Model):
     """Custom users table (separate from Django auth.User for existing schema)"""
     id = models.BigAutoField(primary_key=True)
@@ -191,7 +191,7 @@ class Users(models.Model):
     def __str__(self):
         return self.username
 
-
+# اطلاعات تکمیلی مربوط به کاربران
 class UserProfiles(models.Model):
     user = models.OneToOneField(
         Users, models.CASCADE, db_column='user_id', primary_key=True, related_name='profile'
@@ -217,7 +217,7 @@ class UserProfiles(models.Model):
     def __str__(self):
         return f'Profile of {self.user_id}'
 
-
+# جدول واسط بین کاربران و برچسب‌ها
 class UserTags(models.Model):
     user = models.ForeignKey(Users, models.CASCADE, db_column='user_id', related_name='user_tags')
     tag = models.ForeignKey(Tags, models.CASCADE, db_column='tag_id', related_name='user_tags')
@@ -230,7 +230,7 @@ class UserTags(models.Model):
         verbose_name = 'برچسب کاربر'
         verbose_name_plural = 'برچسب‌های کاربر'
 
-
+# مدل ثبت تعامل کاربران با جاذبه‌های گردشگری
 class Interactions(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(Users, models.CASCADE, db_column='user_id', related_name='interactions')

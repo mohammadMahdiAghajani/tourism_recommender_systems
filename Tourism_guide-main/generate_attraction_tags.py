@@ -4,7 +4,7 @@ import mariadb
 DB_CONFIG = {
     "host": "127.0.0.1",
     "user": "root",
-    "password": "yourpass",
+    # "password": "yourpass",
     "database": "test",
     "port": 3306,
 }

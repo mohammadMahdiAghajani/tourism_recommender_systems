@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# مسیرهای اصلی پروژه
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
